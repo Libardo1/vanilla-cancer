@@ -1,0 +1,40 @@
+bazel-bin/inception/flowers_train \
+  --train_dir="inception/flowers_train/" \
+  --data_dir="inception/data/processed/" \
+  --pretrained_model_checkpoint_path="inception/inception-v3-model/inception-v3/model.ckpt-157585" \
+  --subset=train \
+  --fine_tune=True \
+  --initial_learning_rate=0.001 \
+  --input_queue_memory_factor=1
+
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle/
+export PATH=$JAVA_HOME/bin:$PATH
+
+density:
+dev: 1015
+train: 2672
+
+
+bazel-bin/inception/flowers_eval \
+  --eval_dir="inception/flowers_eval" \
+  --data_dir="inception/data/processed/" \
+  --subset=validation \
+  --num_examples=1015 \
+  --checkpoint_dir="flowers_train/" \
+  --input_queue_memory_factor=1 \
+  --run_once
+
+
+  bazel-bin/inception/flowers_eval   --eval_dir="inception/flowers_eval"   --data_dir="inception/data/processed/"   --subset=validation   --num_examples=1015   --checkpoint_dir="/scratch/njl/cancer2/inception/flowers_train/"   --input_queue_memory_factor=1   --run_once
+
+  rosetta6 tmux attach
+
+  test: 72% train: 99%
+
+  Not good!
+  K-Nearest-Neighbor classifier gets 65%
+
+  TODO: 
+  batch_normalization
+  regularization
+  
